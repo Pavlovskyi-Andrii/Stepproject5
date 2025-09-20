@@ -1,79 +1,29 @@
-# Название workflow — отображается в UI GitHub Actions
-name: CI - Build and push Docker image and update manifests
+name: CI - Build and Push Docker
 
-# Триггер: запуск при пуше в ветку main
 on:
   push:
-    branches: [main]  # можно указать несколько веток: [main, dev, staging]
+    branches: [ "main" ]   # запускаем при пуше в main
+  pull_request:
+    branches: [ "main" ]
 
-# Права для встроенного GitHub Token
-# Нужны для git push, если ты коммитишь изменения в репозиторий
-permissions:
-  contents: write
-
-# Определение джоба (задачи)
 jobs:
-  build-and-push:
-    # Где будет выполняться — GitHub предоставляет ubuntu-latest VM
+  build:
     runs-on: ubuntu-latest
 
-    # Глобальные переменные окружения для этого джоба
-    env:
-      IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/test-app
-      # Можно добавить VERSION: ${{ github.sha }} или другие переменные
-
-    # Последовательность шагов
     steps:
-      # Шаг 1: клонируем репозиторий
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # Шаг 2: включаем поддержку QEMU — нужен для multi-arch билдов (например, ARM)
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      # Шаг 3: включаем Docker Buildx — продвинутый билд-движок
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Шаг 4: логинимся в DockerHub
-      # Используем секреты, которые ты должен заранее добавить в GitHub → Settings → Secrets
-      - name: Login to DockerHub
+      - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Шаг 5: билд и пуш Docker-образа
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .               # корень проекта
-          file: ./Dockerfile       # путь к Dockerfile
-          push: true               # пушим образ в DockerHub
-          tags: |                  # теги образа
-            ${{ env.IMAGE }}:${{ github.sha }}   # уникальный тег по SHA коммита
-            ${{ env.IMAGE }}:latest              # стабильный тег latest
-
-      # Шаг 6: обновляем Kubernetes-манифест
-      # Заменяем тег образа в deployment.yaml и пушим изменения
-      - name: Update manifests repo
+      - name: Build Docker image
         run: |
-          # Настройка git-автора для коммита
-          git config --global user.email "actions@github.com"
-          git config --global user.name "github-actions"
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }} ./repo-code
 
-          # Заменяем строку image: ... на новый тег
-          sed -i "s|image: .*|image: ${{ env.IMAGE }}:${{ github.sha }}|" repo-manifests/k8s/deployment.yaml
-
-          # Переход в директорию с манифестами
-          cd repo-manifests || exit 0
-
-          # Добавляем файл в коммит
-          git add k8s/deployment.yaml
-
-          # Коммитим изменения, если они есть
-          git commit -m "ci: update image to ${{ github.sha }}" || echo "no changes to commit"
-
-          # Пушим в репозиторий
-          git push
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }}
