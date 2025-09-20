@@ -9,3 +9,4 @@ Terraform конфигурация:
  aws eks update-kubeconfig --region eu-central-1 --name <cluster-name>
 4. Helm релизы (ingress-nginx, argocd) тоже создаются через terraform
 (helm_install.tf)
+5.
