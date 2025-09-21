@@ -1,47 +1,70 @@
-name: CI - Build and Push Docker
+name: Simple CI - Build & Push to Docker Hub
 
+# Когда запускается workflow
 on:
   push:
-    branches: [ "main" ]   # запускаем при пуше в main
-  pull_request:
-    branches: [ "main" ]
+    branches: [main, master]  # При пуше в основную ветку
+  workflow_dispatch:          # Возможность запустить вручную
+
+# Глобальные переменные
+env:
+  DOCKER_IMAGE_NAME: devasher/test-app  # ⚠️ ЗАМЕНИТЕ на свой username
 
 jobs:
-  build:
+  # Единственная джоба - сборка и пуш
+  build-and-push:
+    name: Build Docker Image and Push to Hub
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }} ./repo-code
-          docker tag ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/test-app:latest
-
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/test-app:latest
-      - name: Update deployment image
-        run: |
-          TAG=${{ github.sha }}
-          sed -i "s|image: .*|image: ***/test-app:${TAG}|" repo-manifests/kuber/deployment.yaml
-          cd repo-manifests
-          git add kuber/deployment.yaml
-
-          git config user.email pavlovskyiandrii@gmail.com
-          git config user.name pavlovskyiandrii
-          cd repo-manifests
-          git add kuber/deployment.yaml
-          git commit -m "ci: update image to ${TAG}" || echo "no changes"
-          git push
-          
-
-          
+    # Шаг 1: Получаем код из репозитория
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    # Шаг 2: Показываем информацию о коммите  
+    - name: 📋 Show Build Info
+      run: |
+        echo "🚀 Building Docker image for commit: ${{ github.sha }}"
+        echo "📦 Image will be tagged as: ${{ env.DOCKER_IMAGE_NAME }}:latest"
+        echo "📦 Image will be tagged as: ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}"
+        
+    # Шаг 3: Настраиваем Docker Buildx (для расширенных возможностей)
+    - name: 🔧 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    # Шаг 4: Входим в Docker Hub
+    - name: 🔐 Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    # Шаг 5: Собираем и пушим Docker образ
+    - name: 🏗️ Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .                    # Контекст - текущая директория
+        file: ./Dockerfile           # Путь к Dockerfile
+        push: true                   # Пушить в registry
+        tags: |
+          ${{ env.DOCKER_IMAGE_NAME }}:latest
+          ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+        platforms: linux/amd64      # Платформа (упрощаем до одной)
+        
+    # Шаг 6: Показываем результат
+    - name: ✅ Build Complete
+      run: |
+        echo "🎉 Build completed successfully!"
+        echo ""
+        echo "📦 Published images:"
+        echo "   • ${{ env.DOCKER_IMAGE_NAME }}:latest"
+        echo "   • ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}"
+        echo ""
+        echo "🔧 To deploy manually, use:"
+        echo "   docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest"
+        echo "   docker run -p 5000:5000 ${{ env.DOCKER_IMAGE_NAME }}:latest"
+        echo ""
+        echo "🔄 Next steps:"
+        echo "   1. Test the image locally"
+        echo "   2. Set up Kubernetes cluster" 
+        echo "   3. Create deployment manifests"
