@@ -43,7 +43,7 @@ jobs:
     - name: 🏗️ Build and Push Docker Image
       uses: docker/build-push-action@v5
       with:
-        context: .                    # Контекст - текущая директория
+        context: ./repo-code                    # Контекст - текущая директория
         file: .repo-code\Dockerfile         # Путь к Dockerfile
         push: true                   # Пушить в registry
         tags: |
