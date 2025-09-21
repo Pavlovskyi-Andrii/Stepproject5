@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE_NAME: pavlovskyiandrii/test-app  # ← Замените на ваш username
+  DOCKER_IMAGE_NAME: devasher/test-app  # ← Замените на ваш username
 
 jobs:
   build-and-push:
