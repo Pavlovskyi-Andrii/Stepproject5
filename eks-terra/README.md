@@ -10,4 +10,4 @@ Terraform конфигурация:
 4. Helm релизы (ingress-nginx, argocd) тоже создаются через terraform
 (helm_install.tf)
 5.
-6.
+
