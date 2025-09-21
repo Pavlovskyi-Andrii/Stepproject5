@@ -32,11 +32,13 @@ jobs:
       - name: Update manifests repo (same repo)
         run: |
           TAG=${{ github.sha }}
-          sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/test-app:${TAG}|" repo-manifests/Kuber/deployment.yaml
-          git config user.email "actions@github.com"
-          git config user.name "github-actions"
+          sed -i "s|image: .*|image: ***/test-app:${TAG}|" repo-manifests/kuber/deployment.yaml
           cd repo-manifests
-          git add Kuber/deployment.yaml
+          git add kuber/deployment.yaml
+          git config user.email pavlovskyiandrii@gmail.com
+          git config user.name pavlovskyiandrii
+          cd repo-manifests
+          git add kuber/deployment.yaml
           git commit -m "ci: update image to ${TAG}" || echo "no changes"
           git push
           
