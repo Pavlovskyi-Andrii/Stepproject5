@@ -29,12 +29,13 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USERNAME }}/test-app:latest
-      - name: Update manifests repo (same repo)
+      - name: Update deployment image
         run: |
           TAG=${{ github.sha }}
           sed -i "s|image: .*|image: ***/test-app:${TAG}|" repo-manifests/kuber/deployment.yaml
           cd repo-manifests
           git add kuber/deployment.yaml
+
           git config user.email pavlovskyiandrii@gmail.com
           git config user.name pavlovskyiandrii
           cd repo-manifests
