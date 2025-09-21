@@ -29,3 +29,16 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/test-app:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USERNAME }}/test-app:latest
+      - name: Update manifests repo (same repo)
+        run: |
+          TAG=${{ github.sha }}
+          sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/test-app:${TAG}|" repo-manifests/Kuber/deployment.yaml
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          cd repo-manifests
+          git add Kuber/deployment.yaml
+          git commit -m "ci: update image to ${TAG}" || echo "no changes"
+          git push
+          
+
+          
