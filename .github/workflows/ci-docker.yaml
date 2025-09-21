@@ -44,7 +44,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .                    # Контекст - текущая директория
-        file: ./Dockerfile           # Путь к Dockerfile
+        file: .repo-code/Dockerfile           # Путь к Dockerfile
         push: true                   # Пушить в registry
         tags: |
           ${{ env.DOCKER_IMAGE_NAME }}:latest
