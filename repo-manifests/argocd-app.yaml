@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/Pavlovskyi-Andrii/home_work/________________________.git'
-    path: 'k8s'
+    repoURL: 'https://github.com/Pavlovskyi-Andrii/Stepproject5.git'
+    path: 'k8s' # абсолютный путь до директории с манифестами
     targetRevision: HEAD
   destination:
     server: 'https://kubernetes.default.svc'

@@ -1,0 +1,22 @@
+{
+    "TargetHealthDescriptions": [
+        {
+            "Target": {
+                "Id": "10.0.3.210",
+                "Port": 8080,
+                "AvailabilityZone": "eu-central-1c"
+            },
+            "HealthCheckPort": "8080",
+            "TargetHealth": {
+                "State": "unhealthy",
+                "Reason": "Target.FailedHealthChecks",
+                "Description": "Health checks failed"
+            },
+            "AdministrativeOverride": {
+                "State": "no_override",
+                "Reason": "AdministrativeOverride.NoOverride",
+                "Description": "No override is currently active on target"
+            }
+        }
+    ]
+}

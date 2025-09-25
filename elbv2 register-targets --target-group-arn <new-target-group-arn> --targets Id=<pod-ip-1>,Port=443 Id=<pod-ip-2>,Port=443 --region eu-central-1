@@ -1,0 +1,20 @@
+{
+    "TargetGroups": [
+        {
+            "TargetGroupArn": "arn:aws:elasticloadbalancing:eu-central-1:013372624309:targetgroup/argocd-tg-443/a615d872fad47a5b",
+            "TargetGroupName": "argocd-tg-443",
+            "Protocol": "TCP",
+            "Port": 443,
+            "VpcId": "vpc-0457fec6187738bb9",
+            "HealthCheckProtocol": "TCP",
+            "HealthCheckPort": "traffic-port",
+            "HealthCheckEnabled": true,
+            "HealthCheckIntervalSeconds": 30,
+            "HealthCheckTimeoutSeconds": 10,
+            "HealthyThresholdCount": 5,
+            "UnhealthyThresholdCount": 2,
+            "TargetType": "instance",
+            "IpAddressType": "ipv4"
+        }
+    ]
+}
