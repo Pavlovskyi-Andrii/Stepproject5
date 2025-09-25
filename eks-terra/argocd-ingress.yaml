@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    meta.helm.sh/release-name: argocd
+    meta.helm.sh/release-namespace: argocd
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  creationTimestamp: "2025-09-23T19:57:48Z"
+  generation: 2
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argocd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v2.9.0
+    helm.sh/chart: argo-cd-5.51.0
+  name: argocd-server
+  namespace: argocd
+  resourceVersion: "228734"
+  uid: b3c823c8-28d3-45ab-bca1-79bd19c21566
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: argocd.student1.devops8.test-danit.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: argocd-server
+            port:
+              number: 443
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+    - hostname: a0cc5466de78c486fb4a8b4e8dd2e5bf-53ad8c88ffbc7d3e.elb.eu-central-1.amazonaws.com
+nano argocd-ingress.yaml

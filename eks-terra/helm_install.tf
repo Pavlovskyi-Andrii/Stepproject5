@@ -1,66 +1,95 @@
-# Получаем данные о созданном EKS кластере
-data "aws_eks_cluster" "cluster" {
-    name = module.eks.cluster_id
-}
-data "aws_eks_cluster_auth" "cluster" {
-    name = module.eks.cluster_id
-}
+#####################################
+# Providers
+#####################################
 provider "kubernetes" {
-    host = data.aws_eks_cluster.cluster.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-    token = data.aws_eks_cluster_auth.cluster.token
-}
-provider "helm" {
-    kubernetes {
-        host = data.aws_eks_cluster.cluster.endpoint
-        cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-        token = data.aws_eks_cluster_auth.cluster.token
-    }
-}
-# Namespace для ingress
-resource "kubernetes_namespace" "ingress_nginx" {
-    metadata {
-        name = "ingress-nginx"
-    }
-}
-# Helm release: ingress-nginx
-resource "helm_release" "ingress_nginx" {
-    name = "ingress-nginx"
-    repository = "https://kubernetes.github.io/ingress-nginx"
-    chart = "ingress-nginx"
-    namespace = kubernetes_namespace.ingress_nginx.metadata[0].name
-    version = "5.6.0" # пример; при необходимости обновите
-    values = [
-        <<EOF
-    controller:
-        service:
-        type: LoadBalancer
-EOF
-]
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.this.token
 }
 
-# Namespace для ArgoCD
-resource "kubernetes_namespace" "argocd" {
-    metadata {
-        name = "argocd"
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    token                  = data.aws_eks_cluster_auth.this.token
+  }
 }
+
+# Получаем токен авторизации к кластеру
+data "aws_eks_cluster_auth" "this" {
+  name = module.eks.cluster_name
 }
-# Helm release: ArgoCD
-resource "helm_release" "argocd" {
-    name = "argocd"
-    repository = "https://argoproj.github.io/argo-helm"
-    chart = "argo-cd"
-    namespace = kubernetes_namespace.argocd.metadata[0].name
-    version = "6.6.0" # пример; обновите при необходимости
-    values = [
-        <<EOF
-server:
-    ingress:
-        enabled: true
-        hosts:
-        - argocd.${var.cluster_short}.${var.group_domain}
+
+#####################################
+# Ingress NGINX
+#####################################
+resource "kubernetes_namespace" "ingress_nginx" {
+  metadata {
+    name = "ingress-nginx"
+  }
+}
+
+resource "helm_release" "ingress_nginx" {
+  name       = "ingress-nginx"
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  chart      = "ingress-nginx"
+  namespace  = kubernetes_namespace.ingress_nginx.metadata[0].name
+  version    = "4.8.0"
+
+  values = [
+    <<-EOF
+    controller:
+      service:
+        type: LoadBalancer
         annotations:
-            kubernetes.io/ingress.class: "nginx"
-EOF
-]
+          service.beta.kubernetes.io/aws-load-balancer-type: nlb
+          service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      config:
+        use-forwarded-headers: "true"
+        compute-full-forwarded-for: "true"
+    EOF
+  ]
+}
+
+#####################################
+# ArgoCD
+#####################################
+resource "kubernetes_namespace" "argocd" {
+  metadata {
+    name = "argocd"
+  }
+}
+
+resource "helm_release" "argocd" {
+  name       = "argocd"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd"
+  namespace  = kubernetes_namespace.argocd.metadata[0].name
+  version    = "5.51.0"
+
+  values = [
+    <<-EOF
+    server:
+      service:
+        type: ClusterIP
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        hosts:
+          - argocd.${var.cluster_short}.${var.group_domain}
+        paths:
+          - /
+        pathType: Prefix
+        annotations:
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    configs:
+      params:
+        server.insecure: true
+    EOF
+  ]
+
+  depends_on = [
+    helm_release.ingress_nginx
+  ]
 }

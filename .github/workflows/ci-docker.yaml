@@ -2,7 +2,7 @@ name: Simple CI - Build & Push to Docker Hub
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   workflow_dispatch:
 
 env:
