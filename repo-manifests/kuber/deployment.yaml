@@ -2,8 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: test-app
+  namespace: default
+  labels:
+    app: test-app
+    version: v1
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: test-app
@@ -11,12 +15,42 @@ spec:
     metadata:
       labels:
         app: test-app
+        version: v1
     spec:
       containers:
-        - name: test-app
-          image: dockerhubuser/test-app:TAG_PLACEHOLDER
-          ports:
-            - containerPort: 8080
-          env:
-            - name: PORT
-              value: "8080"
+      - name: test-app
+        image: devasher/test-app:latest  # ← Исправленный образ
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: APP_VERSION
+          value: "v1.0.0"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      restartPolicy: Always
