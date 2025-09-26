@@ -2,3 +2,8 @@ eks-terra/.terraform/providers/
 .git/objects
 argocd-linux-amd64
 repo-manifests/kuber/argocd-linux-amd64
+argocd-linux-amd64
+*.deb
+*.jar
+# Binary files
+bfg.jar
