@@ -7,3 +7,7 @@ argocd-linux-amd64
 *.jar
 # Binary files
 bfg.jar
+argocd-linux-amd64
+*.deb
+*.jar
+bfg.jar
