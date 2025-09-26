@@ -1,2 +1,4 @@
 eks-terra/.terraform/providers/
 .git/objects
+argocd-linux-amd64
+repo-manifests/kuber/argocd-linux-amd64
