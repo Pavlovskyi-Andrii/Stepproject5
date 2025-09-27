@@ -5,9 +5,37 @@ repo-manifests/kuber/argocd-linux-amd64
 argocd-linux-amd64
 *.deb
 *.jar
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.backup
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
 # Binary files
 bfg.jar
+kubectl
+minikube-linux-amd64
 argocd-linux-amd64
 *.deb
 *.jar
 bfg.jar
+
+# Keys
+*.pem
+*.key
