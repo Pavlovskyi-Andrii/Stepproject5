@@ -1,0 +1,469 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+  [33m~[0m update in-place[0m
+
+Terraform will perform the following actions:
+
+[1m  # aws_acm_certificate.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_acm_certificate" "main" {
+      [32m+[0m[0m arn                       = (known after apply)
+      [32m+[0m[0m domain_name               = "*.student1.devops8.test-danit.com"
+      [32m+[0m[0m domain_validation_options = [
+          [32m+[0m[0m {
+              [32m+[0m[0m domain_name           = "*.student1.devops8.test-danit.com"
+              [32m+[0m[0m resource_record_name  = (known after apply)
+              [32m+[0m[0m resource_record_type  = (known after apply)
+              [32m+[0m[0m resource_record_value = (known after apply)
+            },
+          [32m+[0m[0m {
+              [32m+[0m[0m domain_name           = "devops8.test-danit.com"
+              [32m+[0m[0m resource_record_name  = (known after apply)
+              [32m+[0m[0m resource_record_type  = (known after apply)
+              [32m+[0m[0m resource_record_value = (known after apply)
+            },
+        ]
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m key_algorithm             = (known after apply)
+      [32m+[0m[0m not_after                 = (known after apply)
+      [32m+[0m[0m not_before                = (known after apply)
+      [32m+[0m[0m pending_renewal           = (known after apply)
+      [32m+[0m[0m renewal_eligibility       = (known after apply)
+      [32m+[0m[0m renewal_summary           = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m subject_alternative_names = [
+          [32m+[0m[0m "*.student1.devops8.test-danit.com",
+          [32m+[0m[0m "devops8.test-danit.com",
+        ]
+      [32m+[0m[0m tags_all                  = (known after apply)
+      [32m+[0m[0m type                      = (known after apply)
+      [32m+[0m[0m validation_emails         = (known after apply)
+      [32m+[0m[0m validation_method         = "DNS"
+
+      [32m+[0m[0m options (known after apply)
+    }
+
+[1m  # aws_acm_certificate_validation.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_acm_certificate_validation" "main" {
+      [32m+[0m[0m certificate_arn         = (known after apply)
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m validation_record_fqdns = (known after apply)
+    }
+
+[1m  # aws_iam_role.eks_cluster[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "eks_cluster" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "student1-cluster-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = (known after apply)
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # aws_iam_role.eks_worker_nodes[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "eks_worker_nodes" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "student1-worker-nodes-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = (known after apply)
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # aws_iam_role.external_dns[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "external_dns" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRoleWithWebIdentity"
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringEquals = {
+                              [32m+[0m[0m "oidc.eks.eu-central-1.amazonaws.com/id/B7F9D5944C2AC228F60AF39A6F8D8DA5:aud" = "sts.amazonaws.com"
+                              [32m+[0m[0m "oidc.eks.eu-central-1.amazonaws.com/id/B7F9D5944C2AC228F60AF39A6F8D8DA5:sub" = "system:serviceaccount:external-dns:external-dns"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Federated = "arn:aws:iam::013372624309:oidc-provider/oidc.eks.eu-central-1.amazonaws.com/id/B7F9D5944C2AC228F60AF39A6F8D8DA5"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "student1-external-dns"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags_all              = (known after apply)
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # aws_iam_role_policy.external_dns[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy" "external_dns" {
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "student1-external-dns-policy"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m policy      = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "route53:ChangeResourceRecordSets",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "arn:aws:route53:::hostedzone/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "route53:ListHostedZones",
+                          [32m+[0m[0m "route53:ListResourceRecordSets",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "*",
+                        ]
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m role        = (known after apply)
+    }
+
+[1m  # aws_iam_role_policy_attachment.eks_cluster_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+      [32m+[0m[0m role       = "student1-cluster-role"
+    }
+
+[1m  # aws_iam_role_policy_attachment.eks_cni_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      [32m+[0m[0m role       = "student1-worker-nodes-role"
+    }
+
+[1m  # aws_iam_role_policy_attachment.eks_registry_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "eks_registry_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      [32m+[0m[0m role       = "student1-worker-nodes-role"
+    }
+
+[1m  # aws_iam_role_policy_attachment.eks_worker_node_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      [32m+[0m[0m role       = "student1-worker-nodes-role"
+    }
+
+[1m  # aws_route53_record.cert_validation["*.student1.devops8.test-danit.com"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route53_record" "cert_validation" {
+      [32m+[0m[0m allow_overwrite = true
+      [32m+[0m[0m fqdn            = (known after apply)
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m name            = (known after apply)
+      [32m+[0m[0m records         = (known after apply)
+      [32m+[0m[0m ttl             = 60
+      [32m+[0m[0m type            = (known after apply)
+      [32m+[0m[0m zone_id         = "Z09677011LE4DBU3U1XY5"
+    }
+
+[1m  # aws_route53_record.cert_validation["devops8.test-danit.com"][0m will be created
+[0m  [32m+[0m[0m resource "aws_route53_record" "cert_validation" {
+      [32m+[0m[0m allow_overwrite = true
+      [32m+[0m[0m fqdn            = (known after apply)
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m name            = (known after apply)
+      [32m+[0m[0m records         = (known after apply)
+      [32m+[0m[0m ttl             = 60
+      [32m+[0m[0m type            = (known after apply)
+      [32m+[0m[0m zone_id         = "Z09677011LE4DBU3U1XY5"
+    }
+
+[1m  # aws_s3_bucket_public_access_block.terraform_state[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_public_access_block" "terraform_state" {
+      [32m+[0m[0m block_public_acls       = true
+      [32m+[0m[0m block_public_policy     = true
+      [32m+[0m[0m bucket                  = "stepproject5-terraform-state-7fa3608df9c57d28"
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m ignore_public_acls      = true
+      [32m+[0m[0m restrict_public_buckets = true
+    }
+
+[1m  # aws_s3_bucket_server_side_encryption_configuration.terraform_state[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state" {
+      [32m+[0m[0m bucket = "stepproject5-terraform-state-7fa3608df9c57d28"
+      [32m+[0m[0m id     = (known after apply)
+
+      [32m+[0m[0m rule {
+          [32m+[0m[0m apply_server_side_encryption_by_default {
+              [32m+[0m[0m sse_algorithm     = "AES256"
+                [90m# (1 unchanged attribute hidden)[0m[0m
+            }
+        }
+    }
+
+[1m  # aws_s3_bucket_versioning.terraform_state[0m will be created
+[0m  [32m+[0m[0m resource "aws_s3_bucket_versioning" "terraform_state" {
+      [32m+[0m[0m bucket = "stepproject5-terraform-state-7fa3608df9c57d28"
+      [32m+[0m[0m id     = (known after apply)
+
+      [32m+[0m[0m versioning_configuration {
+          [32m+[0m[0m mfa_delete = (known after apply)
+          [32m+[0m[0m status     = "Enabled"
+        }
+    }
+
+[1m  # aws_security_group.alb[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "alb" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Security group for ALB"
+      [32m+[0m[0m egress                 = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_blocks      = [
+                  [32m+[0m[0m "0.0.0.0/0",
+                ]
+              [32m+[0m[0m from_port        = 0
+              [32m+[0m[0m ipv6_cidr_blocks = []
+              [32m+[0m[0m prefix_list_ids  = []
+              [32m+[0m[0m protocol         = "-1"
+              [32m+[0m[0m security_groups  = []
+              [32m+[0m[0m self             = false
+              [32m+[0m[0m to_port          = 0
+                [90m# (1 unchanged attribute hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_blocks      = [
+                  [32m+[0m[0m "0.0.0.0/0",
+                ]
+              [32m+[0m[0m description      = "HTTP"
+              [32m+[0m[0m from_port        = 80
+              [32m+[0m[0m ipv6_cidr_blocks = []
+              [32m+[0m[0m prefix_list_ids  = []
+              [32m+[0m[0m protocol         = "tcp"
+              [32m+[0m[0m security_groups  = []
+              [32m+[0m[0m self             = false
+              [32m+[0m[0m to_port          = 80
+            },
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_blocks      = [
+                  [32m+[0m[0m "0.0.0.0/0",
+                ]
+              [32m+[0m[0m description      = "HTTPS"
+              [32m+[0m[0m from_port        = 443
+              [32m+[0m[0m ipv6_cidr_blocks = []
+              [32m+[0m[0m prefix_list_ids  = []
+              [32m+[0m[0m protocol         = "tcp"
+              [32m+[0m[0m security_groups  = []
+              [32m+[0m[0m self             = false
+              [32m+[0m[0m to_port          = 443
+            },
+        ]
+      [32m+[0m[0m name                   = "student1-alb-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name" = "student1-alb-sg"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name" = "student1-alb-sg"
+        }
+      [32m+[0m[0m vpc_id                 = "vpc-0457fec6187738bb9"
+    }
+
+[1m  # aws_security_group_rule.worker_node_ingress_alb[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "worker_node_ingress_alb" {
+      [32m+[0m[0m description              = "Allow ALB to communicate with worker nodes"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = "sg-07ccf7e5e363aa54a"
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = (known after apply)
+      [32m+[0m[0m to_port                  = 65535
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # aws_security_group_rule.worker_node_ingress_self[0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group_rule" "worker_node_ingress_self" {
+      [32m+[0m[0m description              = "Allow nodes to communicate with each other"
+      [32m+[0m[0m from_port                = 0
+      [32m+[0m[0m id                       = (known after apply)
+      [32m+[0m[0m protocol                 = "-1"
+      [32m+[0m[0m security_group_id        = "sg-07ccf7e5e363aa54a"
+      [32m+[0m[0m security_group_rule_id   = (known after apply)
+      [32m+[0m[0m self                     = false
+      [32m+[0m[0m source_security_group_id = "sg-07ccf7e5e363aa54a"
+      [32m+[0m[0m to_port                  = 65535
+      [32m+[0m[0m type                     = "ingress"
+    }
+
+[1m  # helm_release.external_dns[0m will be created
+[0m  [32m+[0m[0m resource "helm_release" "external_dns" {
+      [32m+[0m[0m atomic                     = false
+      [32m+[0m[0m chart                      = "external-dns"
+      [32m+[0m[0m cleanup_on_fail            = false
+      [32m+[0m[0m create_namespace           = true
+      [32m+[0m[0m dependency_update          = false
+      [32m+[0m[0m disable_crd_hooks          = false
+      [32m+[0m[0m disable_openapi_validation = false
+      [32m+[0m[0m disable_webhooks           = false
+      [32m+[0m[0m force_update               = false
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m lint                       = false
+      [32m+[0m[0m manifest                   = (known after apply)
+      [32m+[0m[0m max_history                = 0
+      [32m+[0m[0m metadata                   = (known after apply)
+      [32m+[0m[0m name                       = "external-dns"
+      [32m+[0m[0m namespace                  = "external-dns"
+      [32m+[0m[0m pass_credentials           = false
+      [32m+[0m[0m recreate_pods              = false
+      [32m+[0m[0m render_subchart_notes      = true
+      [32m+[0m[0m replace                    = false
+      [32m+[0m[0m repository                 = "https://kubernetes-sigs.github.io/external-dns/"
+      [32m+[0m[0m reset_values               = false
+      [32m+[0m[0m reuse_values               = false
+      [32m+[0m[0m skip_crds                  = false
+      [32m+[0m[0m status                     = "deployed"
+      [32m+[0m[0m timeout                    = 300
+      [32m+[0m[0m values                     = (known after apply)
+      [32m+[0m[0m verify                     = false
+      [32m+[0m[0m version                    = "1.13.1"
+      [32m+[0m[0m wait                       = true
+      [32m+[0m[0m wait_for_jobs              = false
+    }
+
+[1m  # helm_release.metrics_server[0m will be created
+[0m  [32m+[0m[0m resource "helm_release" "metrics_server" {
+      [32m+[0m[0m atomic                     = false
+      [32m+[0m[0m chart                      = "metrics-server"
+      [32m+[0m[0m cleanup_on_fail            = false
+      [32m+[0m[0m create_namespace           = false
+      [32m+[0m[0m dependency_update          = false
+      [32m+[0m[0m disable_crd_hooks          = false
+      [32m+[0m[0m disable_openapi_validation = false
+      [32m+[0m[0m disable_webhooks           = false
+      [32m+[0m[0m force_update               = false
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m lint                       = false
+      [32m+[0m[0m manifest                   = (known after apply)
+      [32m+[0m[0m max_history                = 0
+      [32m+[0m[0m metadata                   = (known after apply)
+      [32m+[0m[0m name                       = "metrics-server"
+      [32m+[0m[0m namespace                  = "kube-system"
+      [32m+[0m[0m pass_credentials           = false
+      [32m+[0m[0m recreate_pods              = false
+      [32m+[0m[0m render_subchart_notes      = true
+      [32m+[0m[0m replace                    = false
+      [32m+[0m[0m repository                 = "https://kubernetes-sigs.github.io/metrics-server/"
+      [32m+[0m[0m reset_values               = false
+      [32m+[0m[0m reuse_values               = false
+      [32m+[0m[0m skip_crds                  = false
+      [32m+[0m[0m status                     = "deployed"
+      [32m+[0m[0m timeout                    = 300
+      [32m+[0m[0m values                     = [
+          [32m+[0m[0m <<-EOT
+                "args":
+                - "--kubelet-insecure-tls"
+                - "--kubelet-preferred-address-types=InternalIP"
+            EOT,
+        ]
+      [32m+[0m[0m verify                     = false
+      [32m+[0m[0m version                    = "3.11.0"
+      [32m+[0m[0m wait                       = true
+      [32m+[0m[0m wait_for_jobs              = false
+    }
+
+[1m  # module.vpc.aws_subnet.public[1][0m will be updated in-place
+[0m  [33m~[0m[0m resource "aws_subnet" "public" {
+        id                                             = "subnet-03e0be065508a258c"
+      [33m~[0m[0m map_public_ip_on_launch                        = true [33m->[0m[0m false
+        tags                                           = {
+            "Environment"            = "dev"
+            "Name"                   = "student1-vpc-public-eu-central-1b"
+            "Project"                = "devops-final"
+            "Terraform"              = "true"
+            "kubernetes.io/role/elb" = "1"
+        }
+        [90m# (19 unchanged attributes hidden)[0m[0m
+    }
+
+[1m  # module.vpc.aws_subnet.public[2][0m will be updated in-place
+[0m  [33m~[0m[0m resource "aws_subnet" "public" {
+        id                                             = "subnet-09cc42b8da3a8839d"
+      [33m~[0m[0m map_public_ip_on_launch                        = true [33m->[0m[0m false
+        tags                                           = {
+            "Environment"            = "dev"
+            "Name"                   = "student1-vpc-public-eu-central-1c"
+            "Project"                = "devops-final"
+            "Terraform"              = "true"
+            "kubernetes.io/role/elb" = "1"
+        }
+        [90m# (19 unchanged attributes hidden)[0m[0m
+    }
+
+[1mPlan:[0m 20 to add, 2 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [33m~[0m[0m argocd_url                         = "http://argocd.student1.devops8.test-danit.com" [33m->[0m[0m "https://argocd.student1.devops8.test-danit.com"

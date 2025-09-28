@@ -30,7 +30,7 @@ output "configure_kubectl" {
 
 output "argocd_url" {
   description = "ArgoCD server URL"
-  value       = "http://argocd.${var.cluster_short}.${var.group_domain}"
+  value = "https://argocd.${var.cluster_name}.${var.domain_name}"
 }
 
 output "argocd_admin_password_command" {

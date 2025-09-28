@@ -76,7 +76,7 @@ resource "helm_release" "argocd" {
         enabled: true
         ingressClassName: nginx
         hosts:
-          - argocd.${var.cluster_short}.${var.group_domain}
+          - argocd.${var.cluster_name}.${var.domain_name}
         paths:
           - /
         pathType: Prefix
