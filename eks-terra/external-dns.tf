@@ -76,8 +76,8 @@ resource "helm_release" "external_dns" {
         region = var.aws_region
       }
       domainFilters = [var.domain_name]
-      policy = "sync"
-      txtOwnerId = var.cluster_name
+      policy        = "sync"
+      txtOwnerId    = var.cluster_name
     })
   ]
 

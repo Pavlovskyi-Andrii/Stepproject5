@@ -1,0 +1,58 @@
+# server:
+#   service:
+#     type: ClusterIP
+#   ingress:
+#     enabled: true
+#     ingressClassName: nginx
+#     annotations:
+#       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+#       nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#       nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+#       nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+#       nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    
+#       nginx.ingress.kubernetes.io/proxy-buffering: "off"
+#       cert-manager.io/cluster-issuer: "letsencrypt-prod"
+#       external-dns.alpha.kubernetes.io/hostname: argocd.pavlovskyi.devops8.test-danit.com
+#     hosts:
+#       - argocd.pavlovskyi.devops8.test-danit.com
+    
+#     paths:
+#       - /
+#     pathType: Prefix
+
+# configs:
+#   params:
+#     server.insecure: true
+
+server:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      external-dns.alpha.kubernetes.io/hostname: argocd.pavlovskyi.devops8.test-danit.com
+    hosts:
+      - argocd.pavlovskyi.devops8.test-danit.com
+    tls:
+      - secretName: argocd-server-tls
+        hosts:
+          - argocd.pavlovskyi.devops8.test-danit.com
+
+          
+configs:
+  params:
+    server.insecure: true
+    # Увеличить таймауты для всех операций
+    timeout.reconciliation: "300"
+    timeout.hard.reconciliation: "600"
+
+# Увеличить таймауты для Application Controller
+controller:
+  args:
+    repoServerTimeoutSeconds: "120"
+    appResyncPeriod: "300"

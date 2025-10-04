@@ -60,6 +60,7 @@ resource "kubernetes_namespace" "argocd" {
   }
 }
 
+
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
@@ -67,29 +68,91 @@ resource "helm_release" "argocd" {
   namespace  = kubernetes_namespace.argocd.metadata[0].name
   version    = "5.51.0"
 
-  values = [
-    <<-EOF
-    server:
-      service:
-        type: ClusterIP
-      ingress:
-        enabled: true
-        ingressClassName: nginx
-        hosts:
-          - argocd.${var.cluster_name}.${var.domain_name}
-        paths:
-          - /
-        pathType: Prefix
-        annotations:
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    configs:
-      params:
-        server.insecure: true
-    EOF
-  ]
+    values = [file("${path.module}/argocd-values.yaml")]
 
   depends_on = [
     helm_release.ingress_nginx
   ]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# resource "helm_release" "argocd" {
+#   name       = "argocd"
+#   repository = "https://argoproj.github.io/argo-helm"
+#   chart      = "argo-cd"
+#   namespace  = kubernetes_namespace.argocd.metadata[0].name
+#   version    = "5.51.0"
+
+#   values = [file("${path.module}/argocd-values.yaml")]
+
+#   depends_on = [
+#     helm_release.ingress_nginx
+#   ]
+# }
+
+
+
+
+
+
+
+
+
+
+# resource "helm_release" "argocd" {
+#   name       = "argocd"
+#   repository = "https://argoproj.github.io/argo-helm"
+#   chart      = "argo-cd"
+#   namespace  = kubernetes_namespace.argocd.metadata[0].name
+#   version    = "5.51.0"
+
+#   # values = [
+#   #   <<-EOF
+#   #   server:
+#   #     service:
+#   #       type: ClusterIP
+#   #       ingress:
+#   #       enabled: true
+#   #       ingressClassName: nginx
+#   #       annotations:
+#   #       nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+#   #       nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#   #       cert-manager.io/cluster-issuer: "letsencrypt-prod"
+#   #       external-dns.alpha.kubernetes.io/hostname: argocd.pavlovskyi.devops8.test-danit.com
+#   #       hosts:
+#   #       - argocd.pavlovskyi.devops8.test-danit.com
+#   #       tls:
+#   #       - secretName: argocd-server-tls
+#   #       hosts:
+#   #       - argocd.pavlovskyi.devops8.test-danit.com
+#   #       paths:
+#   #         - /
+#   #       pathType: Prefix
+#   #       annotations:
+#   #         nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#   #         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+#   #   configs:
+#   #     params:
+#   #       server.insecure: true
+#   #   EOF
+#   # ]
+
+#   values = [file("${path.module}/argocd-values.yaml")]
+
+#   depends_on = [
+#     helm_release.ingress_nginx
+#   ]
+# }

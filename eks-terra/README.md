@@ -33,7 +33,7 @@ Deploy infrastructure
 terraform apply
 
 Configure kubectl
-aws eks update-kubeconfig --region eu-central-1 --name student1
+aws eks update-kubeconfig --region eu-central-1 --name pavlovskyi
 
 ## Components
 - **EKS Cluster**: Managed Kubernetes cluster
@@ -43,5 +43,5 @@ aws eks update-kubeconfig --region eu-central-1 --name student1
 - **ACM**: SSL certificate management
 
 ## Accessing Services
-- ArgoCD: http://argocd.student1.devops8.test-danit.com/
-- Application: https://app.student1.devops8.test-danit.com
+- ArgoCD: http://argocd.pavlovskyi.devops8.test-danit.com/
+- Application: https://app.pavlovskyi.devops8.test-danit.com

@@ -1,4 +1,6 @@
-# AWS Configuration
+#переменные (имена, размеры, etc)
+
+# AWS Configuration 
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -9,7 +11,7 @@ variable "aws_region" {
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "student1"
+  default     = "pavlovskyi"
 }
 
 variable "cluster_version" {
@@ -35,13 +37,13 @@ variable "group_number" {
 variable "node_instance_type" {
   description = "EC2 instance type for worker nodes"
   type        = string
-  default     = "t3.medium"
+  default     = "t2.micro"
 }
 
 variable "node_desired_capacity" {
   description = "Desired number of worker nodes"
   type        = number
-  default     = 2
+  default     = 4
 }
 
 variable "node_max_capacity" {
@@ -51,9 +53,9 @@ variable "node_max_capacity" {
 }
 
 variable "node_min_capacity" {
-  description = "Minimum number of worker nodes" 
+  description = "Minimum number of worker nodes"
   type        = number
-  default     = 1
+  default     = 4
 }
 
 # ArgoCD Configuration
@@ -79,7 +81,7 @@ variable "enable_external_dns" {
 
 variable "enable_metrics_server" {
   description = "Enable Metrics Server"
-  type        = bool  
+  type        = bool
   default     = true
 }
 
@@ -149,7 +151,7 @@ variable "metrics_server_version" {
 variable "cluster_short" {
   description = "Short name of the cluster for DNS"
   type        = string
-  default     = "student1"
+  default     = "pavlovskyi"
 }
 
 variable "group_domain" {

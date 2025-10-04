@@ -1,0 +1,28 @@
+# cert-manager-values.yaml
+resources:
+  requests:
+    cpu: 10m      # Вместо 100m
+    memory: 64Mi  # Вместо 128Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+webhook:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+cainjector:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+replicaCount: 1  # Вместо 3 реплик

@@ -3,9 +3,6 @@ kind: Deployment
 metadata:
   name: test-app
   namespace: default
-  labels:
-    app: test-app
-    version: v1
 spec:
   replicas: 3
   selector:
@@ -15,33 +12,71 @@ spec:
     metadata:
       labels:
         app: test-app
-        version: v1
     spec:
       containers:
-      - name: test-app
-        image: devasher/test-app:latest
+      - name: nginx
+        image: nginx:latest
         ports:
-        - containerPort: 8080
-          name: http
-        env:
-        - name: APP_VERSION
-          value: "v1.0.0"
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        # УБИРАЕМ ЭТИ СЕКЦИИ:
-        # livenessProbe:
-        # readinessProbe:
-      restartPolicy: Always
+        - containerPort: 80
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: test-app
+#   namespace: default
+#   labels:
+#     app: test-app
+#     version: v1
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: test-app
+#   template:
+#     metadata:
+#       labels:
+#         app: test-app
+#         version: v1
+#     spec:
+#       containers:
+#       - name: test-app
+#         image: devasher/test-app:latest
+#         ports:
+#         - containerPort: 8080
+#           name: http
+#         env:
+#         - name: APP_VERSION
+#           value: "v1.0.0"
+#         - name: POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: metadata.name
+#         - name: POD_IP
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: status.podIP
+#         resources:
+#           requests:
+#             memory: "128Mi"
+#             cpu: "100m"
+#           limits:
+#             memory: "256Mi"
+#             cpu: "200m"
+        
+#       restartPolicy: Always

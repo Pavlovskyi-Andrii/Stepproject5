@@ -1,0 +1,86 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"test-app","namespace":"argocd"},"spec":{"destination":{"namespace":"default","server":"https://kubernetes.default.svc"},"project":"default","source":{"path":"repo-manifests/kuber","repoURL":"https://github.com/Pavlovskyi-Andrii/Stepproject5.git","targetRevision":"main"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"retry":{"backoff":{"duration":"5s","factor":2,"maxDuration":"3m"},"limit":5},"syncOptions":["CreateNamespace=true"]}}}
+  creationTimestamp: "2025-10-03T17:34:51Z"
+  generation: 57
+  name: test-app
+  namespace: argocd
+  resourceVersion: "2441702"
+  uid: a9091e48-8e8a-4bd8-b53d-99fc1e724a7a
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: repo-manifests/kuber
+    repoURL: https://github.com/Pavlovskyi-Andrii/Stepproject5.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+      limit: 5
+    syncOptions:
+    - CreateNamespace=true
+status:
+  conditions:
+  - lastTransitionTime: "2025-10-03T19:58:17Z"
+    message: 'Failed to load target state: failed to generate manifest for source
+      1 of 1: rpc error: code = Unavailable desc = connection error: desc = "transport:
+      Error while dialing: dial tcp: lookup argocd-repo-server: i/o timeout"'
+    type: ComparisonError
+  controllerNamespace: argocd
+  health:
+    status: Healthy
+  reconciledAt: "2025-10-03T20:22:16Z"
+  resources:
+  - health:
+      status: Healthy
+    kind: Service
+    name: test-app-service
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - group: apps
+    health:
+      status: Healthy
+    kind: Deployment
+    name: test-app
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  - group: networking.k8s.io
+    health:
+      status: Healthy
+    kind: Ingress
+    name: test-app-ingress
+    namespace: default
+    requiresPruning: true
+    status: Unknown
+    version: v1
+  summary:
+    externalURLs:
+    - http://app.student1.devops8.test-danit.com/
+    images:
+    - devasher/test-app:latest
+  sync:
+    comparedTo:
+      destination:
+        namespace: default
+        server: https://kubernetes.default.svc
+      source:
+        path: repo-manifests/kuber
+        repoURL: https://github.com/Pavlovskyi-Andrii/Stepproject5.git
+        targetRevision: main
+    status: Unknown

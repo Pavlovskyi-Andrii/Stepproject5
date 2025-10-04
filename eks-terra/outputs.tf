@@ -30,7 +30,7 @@ output "configure_kubectl" {
 
 output "argocd_url" {
   description = "ArgoCD server URL"
-  value = "https://argocd.${var.cluster_name}.${var.domain_name}"
+  value = "https://argocd.pavlovskyi.devops8.test-danit.com"
 }
 
 output "argocd_admin_password_command" {
