@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: app.student1.devops8.test-danit.com
+  - host: app.pavlovskyi.devops8.test-danit.com
     http:
       paths:
       - path: /
