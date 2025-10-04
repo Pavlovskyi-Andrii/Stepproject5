@@ -50,7 +50,7 @@ def root():
     <body>
         <div class="card">
             <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="check">
-            <h1>Step 5 Done ✅</h1>
+            <h1>Step 5.0 Done ✅</h1>
             <p><strong>Date:</strong> {now}</p>
             <p><strong>Pod IP:</strong> {pod_ip}</p>
         </div>
